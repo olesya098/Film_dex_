@@ -18,7 +18,7 @@ ManaFilmDexger – это мобильное приложение, которо�
 - Язык программирования: Java
 - Среда разработки: Android Studio ![icons8-android-48](https://github.com/user-attachments/assets/3ed31c38-27b7-4a0f-a5a9-d355f250014a)
 - Архитектура: MVC (Model-View-Controller) ![icons8-архитектура-продукта-32](https://github.com/user-attachments/assets/a199d00b-f379-4408-8f30-b051c20f44fa)
-- Хранение данных: GitHub ![icons8-firebase-24](https://github.com/user-attachments/assets/eb1eae08-2d26-4d26-a36d-55d70b4914fc)
+- Хранение данных: GitHub
 
 ## 📥 📲 Установка
 Для установки требуется:
@@ -41,6 +41,7 @@ ManaFilmDexger – это мобильное приложение, которо�
   <img src="https://github.com/user-attachments/assets/0eae3848-73dc-4a69-a1fe-e6a0e144ba2f" width="150" alt="Скриншот 5">
   <img src="https://github.com/user-attachments/assets/f0cc0cf7-e4aa-48f3-8500-e971b5880de3" width="150" alt="Скриншот 6">
 </div>
+
 
 
 
