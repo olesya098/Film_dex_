@@ -32,16 +32,16 @@ ManaFilmDexger – это мобильное приложение, которо�
 ГАПОУ ПО ПКИПТ (ИТ-колледж)
 
 ## 📲 Скриншоты приложения
-
 <div align="center">
-  <img src="![photo_2025-08-26_21-00-10](https://github.com/user-attachments/assets/3a3a73ae-af8c-483d-a0bd-64e9d9a37559)" width="150">
-  <img src="![photo_2025-08-26_21-00-12](https://github.com/user-attachments/assets/b5adb02c-ecdf-427f-b24b-dc9ffdaf1142)" width="150">
-  <img src="![photo_2025-08-26_21-00-14](https://github.com/user-attachments/assets/84cb49f8-bc3a-4a72-bf68-0e16163afff8)" width="150">
-  <img src="![photo_2025-08-26_21-00-15](https://github.com/user-attachments/assets/058632d9-1171-49f3-8d18-66c4d27c1fd1)" width="150">
+  <img src="https://github.com/user-attachments/assets/ba7beb45-27e8-46fc-8216-2d0132b8efe4" width="150" alt="Скриншот 1">
+  <img src="https://github.com/user-attachments/assets/2354dbbb-8453-45f4-91eb-ab095d340968" width="150" alt="Скриншот 2">
+  <img src="https://github.com/user-attachments/assets/590f01c6-853c-46f2-a3b6-c1663c43842a" width="150" alt="Скриншот 3">
+  <img src="https://github.com/user-attachments/assets/67bfcc28-9997-4b1b-bc32-145827645ff9" width="150" alt="Скриншот 4">
   <br>
-  <img src="![Uploading photo_2025-08-26_21-00-18.jpg…]()" width="150">
-  <img src="![photo_2025-08-26_21-00-20](https://github.com/user-attachments/assets/21d15226-2068-4591-87a2-4bc0de6a09e8)" width="150">
+  <img src="https://github.com/user-attachments/assets/0eae3848-73dc-4a69-a1fe-e6a0e144ba2f" width="150" alt="Скриншот 5">
+  <img src="https://github.com/user-attachments/assets/f0cc0cf7-e4aa-48f3-8500-e971b5880de3" width="150" alt="Скриншот 6">
 </div>
+
 
 
 
