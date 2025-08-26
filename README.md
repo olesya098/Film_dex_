@@ -15,7 +15,7 @@ ManaFilmDexger – это мобильное приложение, которо�
 - Добавление инвентарного номера и его изменение
 
 ## 🛠 Технологии
-- Язык программирования: Java   <img src="![Java](https://cdn-icons-png.flaticon.com/512/226/226777.png)" width="150">
+- Язык программирования: Java
 - Среда разработки: Android Studio ![icons8-android-48](https://github.com/user-attachments/assets/3ed31c38-27b7-4a0f-a5a9-d355f250014a)
 - Архитектура: MVC (Model-View-Controller) ![icons8-архитектура-продукта-32](https://github.com/user-attachments/assets/a199d00b-f379-4408-8f30-b051c20f44fa)
 - Хранение данных: GitHub ![icons8-firebase-24](https://github.com/user-attachments/assets/eb1eae08-2d26-4d26-a36d-55d70b4914fc)
