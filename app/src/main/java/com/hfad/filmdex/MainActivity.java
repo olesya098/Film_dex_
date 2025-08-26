@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
                 // Запускаем ProgressBar
                 progressBar.setVisibility(View.VISIBLE);
                 progressBar.setProgress(0);
@@ -55,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
                         });
                     }
                 }).start();
+                } catch (Exception e) {
+                    // Вывод сообщения об ошибке, если произошла ошибка
+                    Toast.makeText(MainActivity.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

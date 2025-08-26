@@ -18,7 +18,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -32,10 +31,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Poisk extends AppCompatActivity {
     ArrayList<FilmInformation> film_informations = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,18 +50,28 @@ public class Poisk extends AppCompatActivity {
             imageViewGlavna.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(Poisk.this, "Главная", Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(Poisk.this, "Главная", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(Poisk.this, MainActivity5.class);
-                    startActivity(intent);
+                        Intent intent = new Intent(Poisk.this, MainActivity5.class);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        // Вывод сообщения об ошибке, если произошла ошибка
+                        Toast.makeText(Poisk.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
+
             ImageView imageViewPoisk = findViewById(R.id.Poisk_image);
             imageViewPoisk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(Poisk.this, "Поиск", Toast.LENGTH_SHORT).show();
-
+                    try {
+                        Toast.makeText(Poisk.this, "Поиск", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        // Обработка исключения
+                        Toast.makeText(Poisk.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -72,23 +81,24 @@ public class Poisk extends AppCompatActivity {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        String searchText = findText1.getText().toString();
+                        try {
+                            String searchText = findText1.getText().toString();
 
-                        findByTitle(searchText);
-
+                            findByTitle(searchText);
+                        } catch (Exception e) {
+                            // Обработка исключения
+                            Toast.makeText(v.getContext(), "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                         return true;
                     }
                     return false;
                 }
             });
             new GetFilmTask().execute("https://film-dex.vercel.app/api/v1/films");
-        }
-        catch (Exception e) {
-            EditText text1 = findViewById(R.id.Poisk_films);
-            text1.setText(e.getMessage());
+        } catch (Exception e) {
+            Toast.makeText(this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     private class GetFilmTask extends AsyncTask<String, Void, String> {
@@ -119,6 +129,15 @@ public class Poisk extends AppCompatActivity {
             try {
                 JSONArray jsonArray = new JSONArray(result);
                 LinearLayout film = findViewById(R.id.film);
+
+                // Проверка на пустой результат
+                if (jsonArray.length() == 0) {
+                    Toast.makeText(getApplicationContext(),
+                            "Не найдено данных в базе данных",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
@@ -148,9 +167,15 @@ public class Poisk extends AppCompatActivity {
             } catch (JSONException e) {
                 TextView text = findViewById(R.id.Poisk_films);
                 text.setText(e.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        "Ошибка при обработке данных: " + e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 TextView text = findViewById(R.id.Poisk_films);
                 text.setText(e.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        "Произошла ошибка: " + e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -159,8 +184,11 @@ public class Poisk extends AppCompatActivity {
         try {
             LinearLayout filmLayout = findViewById(R.id.find_films);
             filmLayout.removeAllViews();
+
+            boolean found = false;
             for (FilmInformation films : film_informations) {
                 if (films.title.toLowerCase().contains(text.toLowerCase())) {
+                    found = true;
                     LayoutInflater inflater = LayoutInflater.from(this);
                     View card = inflater.inflate(R.layout.film_card, null);
 
@@ -170,10 +198,8 @@ public class Poisk extends AppCompatActivity {
                     TextView year_film = card.findViewById(R.id.film_year);
                     year_film.setText(String.format(films.film_year));
 
-
                     TextView reiting_film = card.findViewById(R.id.film_reiting);
                     reiting_film.setText(String.format(films.rate));
-
 
                     TextView age_Text = card.findViewById(R.id.film_age);
                     age_Text.setText(String.format(films.film_age));
@@ -184,6 +210,10 @@ public class Poisk extends AppCompatActivity {
                                 .load(films.film_image)
                                 .into(imageView);
                     } catch (Exception e) {
+                        // Обработка ошибки загрузки изображения
+                        Toast.makeText(getApplicationContext(),
+                                "Ошибка загрузки изображения",
+                                Toast.LENGTH_SHORT).show();
                     }
                     card.setOnClickListener(view -> {
                         Intent intent = new Intent(view.getContext(), Information.class);
@@ -194,11 +224,19 @@ public class Poisk extends AppCompatActivity {
                     filmLayout.addView(card);
                 }
             }
-        }
-        catch (Exception e) {
+
+            // Проверка, были ли найдены фильмы
+            if (!found) {
+                Toast.makeText(getApplicationContext(),
+                        "Фильмы по запросу \"" + text + "\" не найдены",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
             EditText text1 = findViewById(R.id.Poisk_films);
             text1.setText(e.getMessage());
+            Toast.makeText(getApplicationContext(),
+                    "Произошла ошибка при поиске: " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
         }
     }
-
 }

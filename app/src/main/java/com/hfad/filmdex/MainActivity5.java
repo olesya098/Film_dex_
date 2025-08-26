@@ -40,26 +40,47 @@ public class MainActivity5 extends AppCompatActivity {
 
         TextView filmsTextView = findViewById(R.id.Films);
         filmsTextView.setOnClickListener(v -> {
-            filterFilmsByCategory("Фильм");
+            try {
+                filterFilmsByCategory("Фильм");
+            } catch (Exception e) {
+                // Обработка исключения
+                Toast.makeText(MainActivity5.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
+
 
         TextView seriesTextView = findViewById(R.id.Serials);
         seriesTextView.setOnClickListener(v -> {
+            try {
             filterFilmsByCategory("Сериал");
+            } catch (Exception e) {
+                // Обработка исключения
+                Toast.makeText(MainActivity5.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
 
         TextView kidsTextView = findViewById(R.id.Kids);
         kidsTextView.setOnClickListener(v -> {
+            try {
             filterFilmsByCategory("Детям");
-        });
+        } catch (Exception e) {
+            // Обработка исключения
+            Toast.makeText(MainActivity5.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    });
 
         ImageView imageViewVse = findViewById(R.id.ochi);
         imageViewVse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filmService.fetchFilms();
-                Toast.makeText(MainActivity5.this, "Все фильмы", Toast.LENGTH_SHORT).show();
-                new GetFilmTask().execute("https://film-dex.vercel.app/api/v1/films");
+                try {
+                    filmService.fetchFilms();
+                    Toast.makeText(MainActivity5.this, "Кинематограф", Toast.LENGTH_SHORT).show();
+                    new GetFilmTask().execute("https://film-dex.vercel.app/api/v1/films");
+                } catch (Exception e) {
+                    // Вывод сообщения об ошибке, если произошла ошибка
+                    Toast.makeText(MainActivity5.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -67,17 +88,29 @@ public class MainActivity5 extends AppCompatActivity {
         imageViewPoisk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
                 Toast.makeText(MainActivity5.this, "Поиск", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(MainActivity5.this, Poisk.class);
                 startActivity(intent);
+                } catch (Exception e) {
+                    // Вывод сообщения об ошибке, если произошла ошибка
+                    Toast.makeText(MainActivity5.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
         ImageView imageViewGlavna = findViewById(R.id.Glavna_image);
         imageViewGlavna.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity5.this, "Главная", Toast.LENGTH_SHORT).show();
+                try {
+                    // Здесь выполняем действие, которое может вызвать исключение
+                    Toast.makeText(MainActivity5.this, "Главная", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    // Обработка исключения
+                    Toast.makeText(MainActivity5.this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
         new GetGenreTask().execute("https://film-dex.vercel.app/api/v1/genres");
@@ -85,42 +118,50 @@ public class MainActivity5 extends AppCompatActivity {
     }
 
 
-    private class GetFilmTask extends AsyncTask<String, Void, String> {
+    private class GetFilmTask extends AsyncTask<String, Void, String> {//класс для получения всех фильмов
 
 
         @Override
         protected String doInBackground(String... urls) {
             try {
+                // Преобразуем первый URL из массива urls в объект URL
                 URL url = new URL(urls[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
 
+                // Открываем соединение по указанному URL
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET"); // Устанавливаем метод запроса GET
+
+                // Получаем поток ответа от сервера
                 InputStream responseStream = connection.getInputStream();
+                // Создаем BufferedReader для чтения данных из потока
                 BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
 
-                StringBuilder result = new StringBuilder();
+                StringBuilder result = new StringBuilder(); // Объект для накопления строки результата
                 String line;
+                // Читаем строки из ответа
                 while ((line = reader.readLine()) != null) {
                     result.append(line);
                 }
-                return result.toString();
+                return result.toString(); // Возвращаем итоговую строку
             } catch (IOException e) {
+                // Обрабатываем исключение ввода-вывода и возвращаем сообщение об ошибке
                 return "Error: " + e.getMessage();
             }
         }
 
-
-
         @Override
         protected void onPostExecute(String result) {
             try {
-
-
+                // Преобразуем строку результата в JSON массив
                 JSONArray jsonArray = new JSONArray(result);
                 LinearLayout films = findViewById(R.id.film);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                // Находим LinearLayout для отображения фильмов
 
+                // Проходим по всем элементам JSON массива
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i); // Получаем текущий JSON объект
+
+                    // Извлекаем данные о фильме из JSON объекта
                     int film_id = jsonObject.getInt("id");
                     String title = jsonObject.getString("title");
                     String category = jsonObject.getString("category_film");
@@ -131,6 +172,7 @@ public class MainActivity5 extends AppCompatActivity {
                     String description = jsonObject.getString("description");
                     String link = jsonObject.getString("link");
 
+                    // Добавляем карточку фильма в LinearLayout
                     films.addView(createCard(
                             film_id,
                             title,
@@ -140,18 +182,19 @@ public class MainActivity5 extends AppCompatActivity {
                             rate
                     ));
 
-
-                    film_informations.add(new FilmInformation(film_id, title,category, film_year, film_age, film_image, rate, description,  link));
+                    // Создаем объект FilmInformation и добавляем его в список film_informations
+                    film_informations.add(new FilmInformation(film_id, title, category, film_year, film_age, film_image, rate, description, link));
                 }
+                // Обработка исключений
+            } catch (JSONException e) {
+
+            } catch (Exception e) {
+
             }
-            catch (JSONException e) {}
-            catch (Exception e) {}
-        }
+        }}
 
-
-    }
-    public class FilmService {
-
+        public class FilmService {
+        //для возврата ко всем фильмам
         // Метод, который выполняет вызов API для получения фильмов
         public void fetchFilms() {
             LinearLayout films = findViewById(R.id.film);
@@ -160,7 +203,7 @@ public class MainActivity5 extends AppCompatActivity {
         }
 
     }
-
+//для фильтрации по категориям
     private void filterFilmsByCategory(String category) {
         LinearLayout films = findViewById(R.id.film);
         films.removeAllViews(); // Очищаем предыдущие карты фильмов
@@ -213,15 +256,21 @@ public class MainActivity5 extends AppCompatActivity {
         }
 
         card.setOnClickListener(view -> {
-            Intent intent = new Intent(view.getContext(), Information.class);
-            intent.putExtra("film_id", film_id);
-            view.getContext().startActivity(intent);
+            try {
+                Intent intent = new Intent(view.getContext(), Information.class);
+                intent.putExtra("film_id", film_id);
+                view.getContext().startActivity(intent);
+            } catch (Exception e) {
+                // Обработка исключения
+                Toast.makeText(view.getContext(), "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
+
 
         return card;
     }
 
-
+    //карты для жанров и их получение
     private class GetGenreTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -295,7 +344,7 @@ public class MainActivity5 extends AppCompatActivity {
 
         return card;
     }
-
+    //фильтрация фильмов по жанрам
     private class GetFilmWithGenreTypeTask extends AsyncTask<String, Void, String> {
 
         @Override

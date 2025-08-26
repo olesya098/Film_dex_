@@ -9,6 +9,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,14 +17,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -44,11 +44,22 @@ public class Information extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        ImageView imageView = findViewById(R.id.imageViewStrelka);
-        imageView.setOnClickListener(v -> finish());
-        new GetFilmTask().execute("https://film-dex.vercel.app/api/v1/films/" + getIntent().getIntExtra("film_id", 0));
+        try {
+            ImageView imageView = findViewById(R.id.imageViewStrelka);
+            imageView.setOnClickListener(v -> finish());
+
+            // Выполнение GetFilmTask с обработкой исключений
+            try {
+                int filmId = getIntent().getIntExtra("film_id", 0);
+                new GetFilmTask().execute("https://film-dex.vercel.app/api/v1/films/" + filmId);
+            } catch (Exception e) {
+                Toast.makeText(this, "Ошибка при загрузке фильма: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Обнаружена ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
-    private class GetFilmTask extends AsyncTask<String, Void, String> {
+        private class GetFilmTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {
